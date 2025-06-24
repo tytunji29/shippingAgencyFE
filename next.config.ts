@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export', // 🔥 REQUIRED for static hosting like SmarterASP.NET
+  // 🔥 REQUIRED for static hosting like SmarterASP.NET
   trailingSlash: true, // ✅ Helps avoid routing issues on static hosts
 
   images: {
