@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,SetStateAction } from "react";
 import {
   Select,
   SelectTrigger,
@@ -15,6 +15,7 @@ import { useAppContext } from "@/context/AppContext";
 
 interface StepFourProps {
   loading: boolean;
+  setStep: Dispatch<SetStateAction<number>>;
   submitShipment: () => void;
   formData: ShipmentDetails;
 }
