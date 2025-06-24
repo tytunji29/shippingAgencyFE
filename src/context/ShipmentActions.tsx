@@ -28,8 +28,6 @@ const shipments = {
 
       const token = window.localStorage.getItem("vubids_token");
       const auth = `Bearer ${token}`;
-      console.log(`token: ${auth}`);
-      console.log(auth);
       const response = await axios.post(
         `${APIURL}/Shipments/create-shipment`,
         { ...details },
@@ -72,9 +70,6 @@ const shipments = {
       }
       const token = window.localStorage.getItem("vubids_token");
       const auth = `Bearer ${token}`;
-      console.log(`token: ${auth}`);
-
-      //const auth = `Bearer ${vubids_user}`;
       const response = await axios.get(
         `${APIURL}/Shipments/get-all-shipment-landing`,
         {
@@ -95,11 +90,13 @@ const shipments = {
   },
   itemCategories: async (dispatch: any) => {
     try {
+      const token = window.localStorage.getItem("vubids_token");
+      const auth = `Bearer ${token}`;
       const response = await axios.get(
         `${APIURL}/Items/get-all-item-categories`,
         {
           headers: {
-            Authorization: vubids_user,
+            Authorization: auth,
           },
         }
       );
@@ -116,11 +113,14 @@ const shipments = {
 
   itemTypes: async (dispatch: any, id: string) => {
     try {
+      
+      const token = window.localStorage.getItem("vubids_token");
+      const auth = `Bearer ${token}`;
       const response = await axios.get(
         `${APIURL}/Items/get-all-item-types-by-category-id?categoryId=${id}`,
         {
           headers: {
-            Authorization: vubids_user,
+            Authorization: auth,
           },
         }
       );
@@ -141,10 +141,13 @@ const shipments = {
 
   all: async (dispatch: any) => {
     try {
+      
+      const token = window.localStorage.getItem("vubids_token");
+      const auth = `Bearer ${token}`;
       shipments.setLoading(dispatch, true);
       const response = await axios.get(`${APIURL}/Shipments/get-all-shipment`, {
         headers: {
-          Authorization: vubids_user,
+          Authorization: auth,
         },
       });
       const data = response.data;

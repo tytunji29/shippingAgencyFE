@@ -84,7 +84,10 @@ export default function QuoteDataTable() {
     fetchShipments();
   }, []);
 
-  const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString();
+function formatDate(dateString: string) {
+  const date = new Date(dateString);
+  return `${date.getDate()}-${date.toLocaleString('default', { month: 'long' })}-${date.getFullYear()}`;
+}
 
   const handleSort = (key: string) => {
     let direction = "ascending";
@@ -162,7 +165,6 @@ export default function QuoteDataTable() {
                     <td className="px-2 py-4 text-sm text-gray-500">{shipment.quote}</td>
                     <td className="px-2 py-4 text-sm text-gray-500">{formatDate(shipment.pickupDate)}</td>
                     <td className="px-2 py-4 text-sm text-gray-500">{formatDate(shipment.deliveryDate)}</td>
-                    <td className="px-2 py-4 text-sm text-gray-500">{formatDate(shipment.timeCreated)}</td>
                     <td className="px-2 py-4 text-sm">
                       <Badge
                         className={cn("text-xs", {

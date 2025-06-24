@@ -34,6 +34,9 @@ export default function SideNavbar() {
     if (userType === "Yes") {
       return link.title !== "Create Shipment" && link.title !== "Messages";
     }
+    if (userType === "No") {
+      return link.title !== "Accepted Transporters" && link.title !== "Messages";
+    }
     return true;
   });
 
