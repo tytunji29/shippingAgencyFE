@@ -3,8 +3,8 @@ import { ACTION_TYPES } from "@/lib/types";
 import user from "./UserActions";
 import shipments from "./ShipmentActions";
 
-//export const APIURL = "https://vubids.online/app/v1";
-export const APIURL = "http://temitayo01-001-site1.ktempurl.com/app/v1";
+
+export const APIURL = "https://temitayo01-001-site1.ktempurl.com/app/v1";
 export const position = "bottom-center";
 export const vubids_user =
   typeof window !== "undefined"
@@ -22,11 +22,3 @@ const actions = {
 
 export default actions;
 
-// export const setLoading = (dispatch: any, isLoading: boolean): void => {
-//   dispatch({ type: ACTION_TYPES.SET_LOADING, payload: isLoading });
-// };
-
-// export const setError = (dispatch: any, error: string | null): void => {
-//   dispatch({ type: ACTION_TYPES.SET_ERROR, payload: error });
-//   toastService.error(error || "", { position });
-// };
