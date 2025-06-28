@@ -201,15 +201,15 @@ export default function QuoteDataTable() {
     if (confirmed.isConfirmed) {
       try {
         const token = localStorage.getItem("vubids_token");
-        const res = await axios.post(
-          `${APIURL}/Quotes/accept-bid`,
-          { quouteId: quote.quoteId },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+       const res = await axios.post(
+  `${APIURL}/Quotes/accept-bid?quouteId=${quote.quoteId}`,
+  {}, // empty body since quouteId is now in the URL
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
 
         if (res.data.status) {
           toast.fire({ icon: "success", title: "Bid accepted!" });
