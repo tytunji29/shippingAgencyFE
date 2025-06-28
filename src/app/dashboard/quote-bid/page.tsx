@@ -127,7 +127,7 @@ function formatDate(dateString: string) {
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-                {["ShipmentId", "Transporter", "From", "To", "Quote", "Pickup Date", "Delivery Date", "Created On"].map((key) => (
+                {["ShipmentId", "Transporter", "From", "To", "Quote", "Pickup Date", "Delivery Date"].map((key) => (
                   <th key={key} className="px-2 py-3 text-left text-sm font-semibold text-gray-700">
                     <button className="flex items-center" onClick={() => handleSort(key)}>
                       {key} {getSortIcon(key)}
@@ -188,7 +188,7 @@ function formatDate(dateString: string) {
                         }
                         disabled={isDisabled}
                         onClick={(e) => {
-                          e.stopPropagation(); // Prevent row click
+                         // e.stopPropagation(); // Prevent row click
                           handleSelectShipment(shipment);
                         }}
                       >
