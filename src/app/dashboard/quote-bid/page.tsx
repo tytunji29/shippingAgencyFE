@@ -135,7 +135,7 @@ export default function QuoteDataTable() {
     try {
       const token = localStorage.getItem("vubids_token");
       const res = await axios.post(
-        `${APIURL}/Quotes/submit`,
+        `${APIURL}/Quotes/make-bid`,
         {
           shipmentId: selectedShipment.shipmentId,
           amount: quoteAmount,
@@ -176,7 +176,7 @@ export default function QuoteDataTable() {
       try {
         const token = localStorage.getItem("vubids_token");
         const res = await axios.post(
-          `${APIURL}/Quotes/accept-bids`,
+          `${APIURL}/Quotes/accept-bid`,
           { quoteId: quote.quoteId },
           {
             headers: {
