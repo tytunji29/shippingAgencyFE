@@ -61,6 +61,8 @@ export default function QuoteDataTable() {
   const [sortConfig, setSortConfig] = useState<{ key: string | null; direction: string | null }>({ key: null, direction: null });
   const [currentPage, setCurrentPage] = useState(1);
   const [mainUser, setMainUser] = useState<string | null>(null);
+  const [quoteAmount, setQuoteAmount] = useState("");
+  const [isBidModalOpen, setIsBidModalOpen] = useState(false);
 
   const pageSize = 10;
 
@@ -84,10 +86,10 @@ export default function QuoteDataTable() {
     fetchShipments();
   }, []);
 
-function formatDate(dateString: string) {
-  const date = new Date(dateString);
-  return `${date.getDate()}-${date.toLocaleString('default', { month: 'long' })}-${date.getFullYear()}`;
-}
+  function formatDate(dateString: string) {
+    const date = new Date(dateString);
+    return `${date.getDate()}-${date.toLocaleString("default", { month: "long" })}-${date.getFullYear()}`;
+  }
 
   const handleSort = (key: string) => {
     let direction = "ascending";
@@ -116,12 +118,43 @@ function formatDate(dateString: string) {
 
   const totalPages = Math.ceil(filteredShipments.length / pageSize);
 
-  const handleSelectShipment = (shipment: Shipment) => {
-    setSelectedShipment(shipment);
+  const handleBidSubmit = async () => {
+    if (!quoteAmount || !selectedShipment) {
+      toast.fire({ icon: "error", title: "Please enter a quote amount" });
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("vubids_token");
+      const res = await axios.post(
+        `${APIURL}/Quotes/make-bid`,
+        {
+          shipmentId: selectedShipment.shipmentId,
+          amount: quoteAmount,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (res.data.status) {
+        toast.fire({ icon: "success", title: "Bid submitted successfully" });
+        setIsBidModalOpen(false);
+        setQuoteAmount("");
+        fetchShipments();
+      } else {
+        toast.fire({ icon: "error", title: res.data.message || "Bid failed" });
+      }
+    } catch (err) {
+      toast.fire({ icon: "error", title: "Error submitting bid" });
+    }
   };
 
   return (
     <div className="max-w-6xl mx-auto mb-10 lg:p-4 bg-white">
+      {/* Main Table */}
       <Dialog open={!!selectedShipment} onOpenChange={() => setSelectedShipment(null)}>
         <div className="hidden md:block overflow-x-auto">
           <table className="w-full">
@@ -153,9 +186,8 @@ function formatDate(dateString: string) {
                   <tr
                     key={shipment.shipmentId}
                     className="hover:bg-gray-50 cursor-pointer"
-                    // Only open modal on row click if NOT mainUser
                     onClick={() => {
-                      if (mainUser !== "Yes") handleSelectShipment(shipment);
+                      if (mainUser !== "Yes") setSelectedShipment(shipment);
                     }}
                   >
                     <td className="px-2 py-4 text-sm text-gray-500">{shipment.shipmentId}</td>
@@ -188,8 +220,13 @@ function formatDate(dateString: string) {
                         }
                         disabled={isDisabled}
                         onClick={(e) => {
-                         // e.stopPropagation(); // Prevent row click
-                          handleSelectShipment(shipment);
+                          e.stopPropagation();
+                          if (mainUser === "Yes" && !isDisabled) {
+                            setSelectedShipment(shipment);
+                            setIsBidModalOpen(true);
+                          } else {
+                            setSelectedShipment(shipment);
+                          }
                         }}
                       >
                         {actionLabel}
@@ -203,6 +240,7 @@ function formatDate(dateString: string) {
         </div>
       </Dialog>
 
+      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-center gap-4 mt-6">
           <Button
@@ -226,6 +264,34 @@ function formatDate(dateString: string) {
           </Button>
         </div>
       )}
+
+      {/* Bid Modal */}
+      <Dialog open={isBidModalOpen} onOpenChange={setIsBidModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Make a Bid</DialogTitle>
+          </DialogHeader>
+          {selectedShipment && (
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm"><strong>Item:</strong> {selectedShipment.item.name}</p>
+                <p className="text-sm"><strong>From:</strong> {selectedShipment.from}</p>
+                <p className="text-sm"><strong>To:</strong> {selectedShipment.to}</p>
+              </div>
+              <input
+                type="number"
+                className="w-full p-2 border rounded"
+                placeholder="Enter your quote amount"
+                value={quoteAmount}
+                onChange={(e) => setQuoteAmount(e.target.value)}
+              />
+              <Button className="w-full" onClick={handleBidSubmit}>
+                Submit Bid
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
